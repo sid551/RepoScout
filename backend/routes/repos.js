@@ -21,12 +21,14 @@ router.get("/search", authenticateToken, async (req, res) => {
           .replace(/\./g, "")
           .replace(/[^a-zA-Z0-9\s-]/g, "")
           .trim()
+          .toLowerCase()
       )
-      .filter(Boolean);
+      .filter(Boolean)
+      .slice(0, 3); // limit to avoid query validation errors
 
-    // Create search query
-    const skillsQuery = sanitizedSkills.join(" OR ");
-    const searchQuery = `${skillsQuery} in:name,description,topics`;
+    // Use first skill as main topic, rest as OR in description
+    const primarySkill = sanitizedSkills[0];
+    const searchQuery = `${primarySkill} in:name,description,topics stars:>100`;
 
     // GitHub API search
     const response = await axios.get(
