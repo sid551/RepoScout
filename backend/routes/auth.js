@@ -110,6 +110,13 @@ router.post("/github", async (req, res) => {
       }
     );
 
+    if (tokenResponse.data.error) {
+      console.error("GitHub token exchange error:", tokenResponse.data);
+      return res.status(400).json({
+        message: `GitHub error: ${tokenResponse.data.error_description}`,
+      });
+    }
+
     const accessToken = tokenResponse.data.access_token;
 
     // Get user data from GitHub
@@ -165,8 +172,13 @@ router.post("/github", async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("GitHub OAuth error:", error);
-    res.status(500).json({ message: "GitHub authentication failed" });
+    console.error("GitHub OAuth error:", error.response?.data || error.message);
+    res
+      .status(500)
+      .json({
+        message: "GitHub authentication failed",
+        detail: error.response?.data || error.message,
+      });
   }
 });
 
