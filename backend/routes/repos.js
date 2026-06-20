@@ -14,8 +14,18 @@ router.get("/search", authenticateToken, async (req, res) => {
       return res.status(400).json({ message: "No skills provided" });
     }
 
+    // Sanitize skills for GitHub search query (remove special chars)
+    const sanitizedSkills = userSkills
+      .map((s) =>
+        s
+          .replace(/\./g, "")
+          .replace(/[^a-zA-Z0-9\s-]/g, "")
+          .trim()
+      )
+      .filter(Boolean);
+
     // Create search query
-    const skillsQuery = userSkills.join(" OR ");
+    const skillsQuery = sanitizedSkills.join(" OR ");
     const searchQuery = `${skillsQuery} in:name,description,topics`;
 
     // GitHub API search
