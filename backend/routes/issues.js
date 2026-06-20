@@ -14,9 +14,22 @@ router.get("/search", authenticateToken, async (req, res) => {
       return res.status(400).json({ message: "No skills provided" });
     }
 
+    // Sanitize and limit skills
+    const sanitizedSkills = userSkills
+      .map((s) =>
+        s
+          .replace(/\./g, "")
+          .replace(/[^a-zA-Z0-9\s-]/g, "")
+          .trim()
+          .toLowerCase()
+      )
+      .filter(Boolean)
+      .slice(0, 3);
+
+    const primarySkill = sanitizedSkills[0];
+
     // Create search query for good first issues
-    const skillsQuery = userSkills.join(" OR ");
-    const searchQuery = `label:"good first issue" ${skillsQuery} state:open`;
+    const searchQuery = `label:"good first issue" ${primarySkill} state:open`;
 
     const response = await axios.get("https://api.github.com/search/issues", {
       params: {
