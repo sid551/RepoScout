@@ -6,6 +6,7 @@ const API_BASE_URL =
 // Create axios instance
 const api = axios.create({
   baseURL: API_BASE_URL,
+  timeout: 30000, // 30s to handle Render cold starts
 });
 
 // Add auth token to requests

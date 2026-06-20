@@ -37,7 +37,11 @@ function Login() {
         navigate("/dashboard");
       }
     } catch (error) {
-      alert(error.response?.data?.message || "GitHub authentication failed");
+      const msg =
+        error.code === "ECONNABORTED"
+          ? "Server is waking up, please try again in a few seconds."
+          : error.response?.data?.message || "GitHub authentication failed";
+      alert(msg);
       window.history.replaceState({}, document.title, window.location.pathname);
     } finally {
       setGithubLoading(false);
@@ -82,7 +86,12 @@ function Login() {
   if (githubLoading) {
     return (
       <div className="text-center" style={{ marginTop: "100px" }}>
-        <p>Authenticating with GitHub...</p>
+        <p style={{ fontSize: "1.1rem", color: "#555" }}>
+          Authenticating with GitHub...
+        </p>
+        <p style={{ fontSize: "0.85rem", color: "#999", marginTop: "8px" }}>
+          This may take a few seconds if the server is waking up.
+        </p>
       </div>
     );
   }
