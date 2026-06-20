@@ -66,6 +66,9 @@ export const bookmarkAPI = {
   removeBookmark: (bookmarkId) => api.delete(`/bookmarks/${bookmarkId}`),
   removeByRepoId: (repoId) => api.delete(`/bookmarks/repo/${repoId}`),
   checkBookmarked: (repoId) => api.get(`/bookmarks/check/${repoId}`),
+  addIssueBookmark: (data) => api.post("/bookmarks/issue", data),
+  checkIssueBookmarked: (issueId) =>
+    api.get(`/bookmarks/check/issue/${issueId}`),
 };
 
 export default api;
