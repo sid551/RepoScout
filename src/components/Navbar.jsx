@@ -67,7 +67,7 @@ function Navbar() {
                 Issues
               </Link>
               <Link to="/bookmarks" className="nav-link">
-                Bookmarks
+                Bookmarks and saved issues
               </Link>
               <Link to="/skills" className="nav-link">
                 Skills

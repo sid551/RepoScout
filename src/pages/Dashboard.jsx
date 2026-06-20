@@ -108,7 +108,7 @@ function Dashboard() {
             Saved Projects
           </h3>
           <p style={{ color: "#666", marginBottom: "20px", lineHeight: "1.5" }}>
-            Your bookmarked repositories
+            Your bookmarked repositories and issues
           </p>
           <Link
             to="/bookmarks"

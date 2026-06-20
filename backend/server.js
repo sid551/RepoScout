@@ -9,6 +9,7 @@ import repoRoutes from "./routes/repos.js";
 import issueRoutes from "./routes/issues.js";
 import bookmarkRoutes from "./routes/bookmarks.js";
 import userRoutes from "./routes/users.js";
+import savedIssueRoutes from "./routes/savedIssues.js";
 
 dotenv.config();
 
@@ -48,6 +49,7 @@ app.use("/api/repos", repoRoutes);
 app.use("/api/issues", issueRoutes);
 app.use("/api/bookmarks", bookmarkRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/saved-issues", savedIssueRoutes);
 
 // Health check
 app.get("/api/health", (req, res) => {

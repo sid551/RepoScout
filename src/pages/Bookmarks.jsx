@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { bookmarkAPI } from "../services/api";
+import { bookmarkAPI, savedIssueAPI } from "../services/api";
 import RepoCard from "../components/RepoCard";
 
 function Bookmarks() {
@@ -14,11 +14,12 @@ function Bookmarks() {
   const loadBookmarks = async () => {
     setLoading(true);
     try {
-      const response = await bookmarkAPI.getBookmarks();
-      setRepoBookmarks(
-        response.data.filter((b) => b.type === "repo" || !b.type)
-      );
-      setIssueBookmarks(response.data.filter((b) => b.type === "issue"));
+      const [repoRes, issueRes] = await Promise.all([
+        bookmarkAPI.getBookmarks(),
+        savedIssueAPI.getSavedIssues(),
+      ]);
+      setRepoBookmarks(repoRes.data);
+      setIssueBookmarks(issueRes.data);
     } catch (error) {
       console.error("Failed to load bookmarks:", error);
       alert("Failed to load bookmarks. Please try again.");
@@ -31,10 +32,19 @@ function Bookmarks() {
     try {
       await bookmarkAPI.removeBookmark(bookmarkId);
       setRepoBookmarks(repoBookmarks.filter((b) => b._id !== bookmarkId));
-      setIssueBookmarks(issueBookmarks.filter((b) => b._id !== bookmarkId));
     } catch (error) {
       console.error("Failed to remove bookmark:", error);
       alert("Failed to remove bookmark. Please try again.");
+    }
+  };
+
+  const handleRemoveSavedIssue = async (savedId) => {
+    try {
+      await savedIssueAPI.removeSavedIssue(savedId);
+      setIssueBookmarks(issueBookmarks.filter((b) => b._id !== savedId));
+    } catch (error) {
+      console.error("Failed to remove saved issue:", error);
+      alert("Failed to remove saved issue. Please try again.");
     }
   };
 
@@ -167,7 +177,7 @@ function Bookmarks() {
                         </p>
                       </div>
                       <button
-                        onClick={() => handleRemoveBookmark(bookmark._id)}
+                        onClick={() => handleRemoveSavedIssue(bookmark._id)}
                         style={{
                           background: "transparent",
                           border: "1px solid #ddd",

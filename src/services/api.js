@@ -66,9 +66,14 @@ export const bookmarkAPI = {
   removeBookmark: (bookmarkId) => api.delete(`/bookmarks/${bookmarkId}`),
   removeByRepoId: (repoId) => api.delete(`/bookmarks/repo/${repoId}`),
   checkBookmarked: (repoId) => api.get(`/bookmarks/check/${repoId}`),
-  addIssueBookmark: (data) => api.post("/bookmarks/issue", data),
-  checkIssueBookmarked: (issueId) =>
-    api.get(`/bookmarks/check/issue/${issueId}`),
+};
+
+// Saved Issues API
+export const savedIssueAPI = {
+  getSavedIssues: () => api.get("/saved-issues"),
+  saveIssue: (data) => api.post("/saved-issues", data),
+  removeSavedIssue: (id) => api.delete(`/saved-issues/${id}`),
+  checkSaved: (issueId) => api.get(`/saved-issues/check/${issueId}`),
 };
 
 export default api;

@@ -27,14 +27,12 @@ router.post("/", authenticateToken, async (req, res) => {
       userId: req.user._id,
       repoId,
     });
-
     if (existingBookmark) {
       return res.status(400).json({ message: "Repository already bookmarked" });
     }
 
     const bookmark = new Bookmark({
       userId: req.user._id,
-      type: "repo",
       repoId,
       repoName,
       description,
@@ -42,52 +40,11 @@ router.post("/", authenticateToken, async (req, res) => {
       language,
       url,
     });
-
     await bookmark.save();
     res.status(201).json(bookmark);
   } catch (error) {
     console.error("Add bookmark error:", error);
     res.status(500).json({ message: "Error adding bookmark" });
-  }
-});
-
-// Add issue bookmark
-router.post("/issue", authenticateToken, async (req, res) => {
-  try {
-    const { issueId, issueTitle, issueRepo, url } = req.body;
-
-    const existing = await Bookmark.findOne({ userId: req.user._id, issueId });
-    if (existing) {
-      return res.status(400).json({ message: "Issue already bookmarked" });
-    }
-
-    const bookmark = new Bookmark({
-      userId: req.user._id,
-      type: "issue",
-      issueId,
-      issueTitle,
-      issueRepo,
-      url,
-    });
-
-    await bookmark.save();
-    res.status(201).json(bookmark);
-  } catch (error) {
-    console.error("Add issue bookmark error:", error);
-    res.status(500).json({ message: "Error adding issue bookmark" });
-  }
-});
-
-// Check if issue is bookmarked
-router.get("/check/issue/:issueId", authenticateToken, async (req, res) => {
-  try {
-    const bookmark = await Bookmark.findOne({
-      userId: req.user._id,
-      issueId: req.params.issueId,
-    });
-    res.json({ isBookmarked: !!bookmark, bookmarkId: bookmark?._id });
-  } catch (error) {
-    res.status(500).json({ message: "Error checking bookmark status" });
   }
 });
 

@@ -6,29 +6,15 @@ const bookmarkSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
-  type: {
-    type: String,
-    enum: ["repo", "issue"],
-    default: "repo",
-  },
-  // Repo fields
-  repoId: { type: String },
-  repoName: { type: String },
+  repoId: { type: String, required: true },
+  repoName: { type: String, required: true },
   description: { type: String },
   stars: { type: Number, default: 0 },
   language: { type: String },
   url: { type: String, required: true },
-  // Issue fields
-  issueId: { type: String },
-  issueTitle: { type: String },
-  issueRepo: { type: String },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
+  createdAt: { type: Date, default: Date.now },
 });
 
-bookmarkSchema.index({ userId: 1, repoId: 1 }, { unique: true, sparse: true });
-bookmarkSchema.index({ userId: 1, issueId: 1 }, { unique: true, sparse: true });
+bookmarkSchema.index({ userId: 1, repoId: 1 }, { unique: true });
 
 export default mongoose.model("Bookmark", bookmarkSchema);
